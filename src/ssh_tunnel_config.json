@@ -1,0 +1,11 @@
+[
+  {
+    "name": "atdove",
+    "local_bind_port": 1077,
+    "ssh_host": "proxy-la.atdove.top",
+    "ssh_port": 22,
+    "ssh_username": "root",
+    "ssh_password": "",
+    "keepalive": 30
+  }
+]
