@@ -6,9 +6,9 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt, QEvent
 from PyQt5.QtGui import QIcon
-from utils.ssh_tunnel import create_ssh_tunnel
-from dialogs import ConfigDialog, AddTunnelDialog
-from traffic import TunnelTraffic
+from src.utils.ssh_tunnel import create_ssh_tunnel
+from src.dialogs import ConfigDialog, AddTunnelDialog
+from src.traffic import TunnelTraffic
 import threading
 
 SETTINGS_PATH = os.path.join(os.path.dirname(__file__), 'settings.json')
@@ -180,7 +180,7 @@ class TunnelManager(QWidget):
         conf = self.configs[idx]
         def do_connect():
             if self.settings.get('debug_print', False):
-                print(f"[DEBUG] 尝试连接: host={conf['ssh_host']} port={conf.get('ssh_port', 22)} user={conf['ssh_username']} 本地端口={conf.get('local_bind_port', 1080)}")
+                print(f"[DEBUG] 尝试连接: host={conf['ssh_host']} port={conf.get('ssh_port', 22)} user={conf['ssh_username']} 本地端口={conf.get('local_bind_port', 1080)} key={conf.get('ssh_key_path', '')}")
             try:
                 print(f"[DEBUG] 连接参数: {conf}")
                 server = create_ssh_tunnel(
@@ -188,7 +188,8 @@ class TunnelManager(QWidget):
                     conf.get('ssh_port', 22),
                     conf['ssh_username'],
                     conf['ssh_password'],
-                    local_bind_address=('127.0.0.1', conf.get('local_bind_port', 1080))
+                    local_bind_address=('127.0.0.1', conf.get('local_bind_port', 1080)),
+                    ssh_key_path=conf.get('ssh_key_path', None)
                 )
                 print(f"[DEBUG] create_ssh_tunnel 返回: {server}")
                 def on_success():

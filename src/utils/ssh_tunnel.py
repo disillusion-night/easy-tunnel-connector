@@ -59,13 +59,19 @@ class SocksProxy(StreamRequestHandler):
             self.request.close()
 
 
-def create_ssh_tunnel(ssh_host, ssh_port, ssh_username, ssh_password, local_bind_address=('127.0.0.1', 1080), keepalive=30):
+def create_ssh_tunnel(ssh_host, ssh_port, ssh_username, ssh_password, local_bind_address=('127.0.0.1', 1080), keepalive=30, ssh_key_path=None):
     """
-    启动本地SOCKS5代理并通过SSH动态端口转发
+    启动本地SOCKS5代理并通过SSH动态端口转发，支持密码或私钥认证
     """
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    client.connect(ssh_host, port=ssh_port, username=ssh_username, password=ssh_password)
+    connect_kwargs = dict(hostname=ssh_host, port=ssh_port, username=ssh_username)
+    if ssh_key_path:
+        connect_kwargs['key_filename'] = ssh_key_path
+        connect_kwargs['password'] = ssh_password if ssh_password else None
+    else:
+        connect_kwargs['password'] = ssh_password
+    client.connect(**connect_kwargs)
     transport = client.get_transport()
     transport.set_keepalive(keepalive)
 
