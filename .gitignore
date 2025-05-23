@@ -1,4 +1,5 @@
 run.bat
 .vscode/
 src/settings.json
+src/ssh_tunnel_config.json
 src/__pycache__/tunnel_manager.cpython-313.pyc
