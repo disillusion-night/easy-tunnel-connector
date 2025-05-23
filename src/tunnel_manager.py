@@ -81,6 +81,11 @@ class TunnelManager(QWidget):
 
         self.status_label = QLabel('当前无已连接隧道。')
         layout.addWidget(self.status_label)
+
+        # 状态栏
+        self.status_bar = QLabel('状态：未连接')
+        layout.addWidget(self.status_bar)
+
         self.setLayout(layout)
 
         self.btn_start.clicked.connect(self.start_tunnel)
@@ -192,7 +197,8 @@ class TunnelManager(QWidget):
                     conf['ssh_username'],
                     conf['ssh_password'],
                     local_bind_address=('127.0.0.1', conf.get('local_bind_port', 1080)),
-                    ssh_key_path=conf.get('ssh_key_path', None)
+                    ssh_key_path=conf.get('ssh_key_path', None),
+                    debug_print=self.settings.get('debug_print', False)
                 )
                 print(f"[DEBUG] create_ssh_tunnel 返回: {server}")
                 def on_success():
@@ -202,12 +208,13 @@ class TunnelManager(QWidget):
                     self.update_status()
                     if not self.timer:
                         self.timer = self.startTimer(1000)
-                    QMessageBox.information(self, '成功', f"隧道已建立，本地端口: {server.local_bind_port}")
+                    self.update_status_bar(f"隧道已建立，本地端口: {server.local_bind_port}")
                 QApplication.instance().postEvent(self, _FunctionEvent(on_success))
             except Exception as e:
                 print(f"[ERROR] 隧道建立失败: {e}")
                 print(traceback.format_exc())
                 def on_fail():
+                    self.update_status_bar(f'隧道建立失败: {e}')
                     QMessageBox.critical(self, '错误', f'隧道建立失败: {e}\n{traceback.format_exc()[:1000]}')
                 QApplication.instance().postEvent(self, _FunctionEvent(on_fail))
         threading.Thread(target=do_connect, daemon=True).start()
@@ -245,6 +252,9 @@ class TunnelManager(QWidget):
                            f"↑{self._format_bytes(traffic.up_speed)}/s ↓{self._format_bytes(traffic.down_speed)}/s "
                            f"总↑{self._format_bytes(traffic.up)} 总↓{self._format_bytes(traffic.down)}\n")
             self.status_label.setText(status)
+
+    def update_status_bar(self, msg):
+        self.status_bar.setText(f'状态：{msg}')
 
     def _format_bytes(self, num):
         for unit in ['B','KB','MB','GB']:

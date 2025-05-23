@@ -1,5 +1,5 @@
 {
-  "minimize_to_tray": false,
+  "minimize_to_tray": true,
   "hide_to_tray_notify": false,
   "debug_print": false
 }

@@ -41,6 +41,8 @@ class SocksProxy(StreamRequestHandler):
                 return
             # 通知客户端连接成功
             self.request.sendall(b'\x05\x00\x00\x01' + socket.inet_aton('0.0.0.0') + b'\x00\x00')
+            # 打印流量数据
+            debug_print = getattr(self.server, 'debug_print', False)
             while True:
                 r, w, x = select.select([self.request, chan], [], [])
                 if self.request in r:
@@ -48,18 +50,22 @@ class SocksProxy(StreamRequestHandler):
                     if len(d) == 0:
                         break
                     chan.send(d)
+                    if debug_print:
+                        print(f'[SOCKS5] 客户端->隧道: {d.hex()}')
                 if chan in r:
                     d = chan.recv(1024)
                     if len(d) == 0:
                         break
                     self.request.send(d)
+                    if debug_print:
+                        print(f'[SOCKS5] 隧道->客户端: {d.hex()}')
             chan.close()
             self.request.close()
         except Exception:
             self.request.close()
 
 
-def create_ssh_tunnel(ssh_host, ssh_port, ssh_username, ssh_password, local_bind_address=('127.0.0.1', 1080), keepalive=30, ssh_key_path=None):
+def create_ssh_tunnel(ssh_host, ssh_port, ssh_username, ssh_password, local_bind_address=('127.0.0.1', 1080), keepalive=30, ssh_key_path=None, debug_print=False):
     """
     启动本地SOCKS5代理并通过SSH动态端口转发，支持密码或私钥认证
     """
@@ -80,6 +86,7 @@ def create_ssh_tunnel(ssh_host, ssh_port, ssh_username, ssh_password, local_bind
 
     server = SocksServer(local_bind_address, SocksProxy)
     server.ssh_transport = transport
+    server.debug_print = debug_print
     t = threading.Thread(target=server.serve_forever, daemon=True)
     t.start()
     server.local_bind_port = local_bind_address[1]
