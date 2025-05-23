@@ -70,11 +70,13 @@ class TunnelManager(QWidget):
         self.btn_refresh = QPushButton('刷新配置')
         self.btn_config = QPushButton('配置')
         self.btn_add = QPushButton('+')
+        self.btn_exit = QPushButton('退出')
         btn_layout.addWidget(self.btn_start)
         btn_layout.addWidget(self.btn_stop)
         btn_layout.addWidget(self.btn_refresh)
         btn_layout.addWidget(self.btn_config)
         btn_layout.addWidget(self.btn_add)
+        btn_layout.addWidget(self.btn_exit)
         layout.addLayout(btn_layout)
 
         self.status_label = QLabel('当前无已连接隧道。')
@@ -86,6 +88,7 @@ class TunnelManager(QWidget):
         self.btn_refresh.clicked.connect(self.refresh_config)
         self.btn_config.clicked.connect(self.open_config_dialog)
         self.btn_add.clicked.connect(self.open_add_dialog)
+        self.btn_exit.clicked.connect(self.exit_app)
 
         # System Tray Icon
         self.tray_icon = QSystemTrayIcon(self)

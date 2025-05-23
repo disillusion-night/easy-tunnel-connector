@@ -1,5 +1,5 @@
-flask==2.0.3
-requests==2.26.0
-numpy==1.21.2
+flask
+requests
+numpy
 paramiko
 PyQt5
