@@ -1,47 +1,29 @@
-# my-python-project
+# easy-tunnel-connector
 
-这是一个Python项目，旨在展示如何组织和管理Python代码。
+## 项目目的
+
+本项目为用户提供一个本地 SOCKS5 代理工具，通过 SSH 隧道安全转发本地流量到远程服务器。适用于科学上网、安全代理、开发调试等场景。
+
+- 本地监听 SOCKS5 端口（如 1080），可配置多个 SSH 隧道。
+- 所有通过本地 SOCKS5 端口的流量将通过 SSH 动态端口转发到远程主机。
+- 支持图形界面管理、托盘最小化、配置多隧道、流量统计等。
 
 ## 项目结构
 
 ```
-my-python-project
-├── src
-│   ├── main.py
-│   └── utils
-│       └── __init__.py
-├── requirements.txt
-├── setup.py
-└── README.md
+README.md
+requirements.txt
+setup.py
+main.py
+src/
+    dialogs.py
+    settings.json
+    ssh_tunnel_config.json
+    traffic.py
+    tunnel_manager.py
+    utils/
+        ssh_tunnel.py
 ```
-
-## 功能
-
-该项目包含一个主程序入口`main.py`，以及一个工具包`utils`，可以在主程序中调用工具函数。
-
-## 安装
-
-要安装项目所需的依赖项，请运行以下命令：
-
-```
-pip install -r requirements.txt
-```
-
-## 使用
-
-要运行主程序，请执行以下命令：
-
-```
-python src/main.py
-```
-
-## 项目目的
-
-本项目旨在为用户提供一个简单易用的本地 SOCKS5 代理工具，通过 SSH 隧道安全地将本地流量转发到远程服务器。适用于科学上网、远程安全代理、开发调试等场景。
-
-- 本地监听一个 SOCKS5 端口（如 1080），可配置多个 SSH 隧道。
-- 所有通过本地 SOCKS5 端口的流量将通过 SSH 动态端口转发到远程主机。
-- 支持图形界面管理、托盘最小化、配置多隧道、流量统计等。
 
 ## 使用说明
 
@@ -56,7 +38,7 @@ pip install -r requirements.txt
 ### 启动程序
 
 ```sh
-python src/main.py
+python main.py
 ```
 
 ### 配置说明
@@ -76,11 +58,6 @@ python src/main.py
 
 如有问题欢迎反馈与贡献！
 
-## 注意
-
-本项目仅支持图形化界面（`ssh_tunnel_gui.py`），请通过该文件启动和管理SSH隧道。
-
-
 ## 贡献
 
-欢迎任何形式的贡献！请提交问题或拉取请求。
+欢迎任何形式的贡献！请提交 issue 或拉取请求。
