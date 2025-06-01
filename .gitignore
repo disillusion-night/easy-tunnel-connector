@@ -1,6 +1,6 @@
 run.bat
 .vscode
-.gitingnore
+.gitignore
 src/settings.json
 src/ssh_tunnel_config.json
 src/__pycache__
