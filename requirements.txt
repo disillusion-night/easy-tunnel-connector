@@ -3,3 +3,4 @@ requests
 numpy
 paramiko
 PyQt5
+pywin32
